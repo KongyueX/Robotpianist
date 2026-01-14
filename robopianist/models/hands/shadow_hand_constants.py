@@ -18,8 +18,8 @@ from typing import Dict, Tuple
 _HERE = Path(__file__).resolve().parent
 _SHADOW_HAND_DIR = _HERE / "third_party" / "shadow_hand"
 
-NQ = 24  # Number of joints.
-NU = 20  # Number of actuators.
+NQ = 16  # Number of joints.
+NU = 16  # Number of actuators.
 
 JOINT_GROUP: Dict[str, Tuple[str, ...]] = {
     "wrist": ("WRJ1", "WRJ0"),

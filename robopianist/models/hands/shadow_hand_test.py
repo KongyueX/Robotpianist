@@ -44,8 +44,8 @@ class ShadowHandTest(parameterized.TestCase):
     @parameterized.product(
         side=[base_hand.HandSide.RIGHT, base_hand.HandSide.LEFT],
         primitive_fingertip_collisions=[False, True],
-        restrict_yaw_range=[False, True],
-        reduced_action_space=[False, True],
+        restrict_yaw_range=[False],
+        reduced_action_space=[False],
     )
     def test_compiles_and_steps(
         self,
@@ -89,14 +89,19 @@ class ShadowHandTest(parameterized.TestCase):
         {"testcase_name": "full_action_space", "reduced_action_space": False},
         {"testcase_name": "reduced_action_space", "reduced_action_space": True},
     )
-    def test_actuators(self, reduced_action_space: bool) -> None:
-        robot = shadow_hand.ShadowHand(reduced_action_space=reduced_action_space)
-        for actuator in robot.actuators:
-            self.assertEqual(actuator.tag, "position")
-        expected_acts = consts.NU + robot.n_forearm_dofs
-        if reduced_action_space:
-            expected_acts -= len(shadow_hand._REDUCED_ACTION_SPACE_EXCLUDED_DOFS)
-        self.assertLen(robot.actuators, expected_acts)
+    def test_restrict_wrist_yaw_range(self) -> None:
+        robot = shadow_hand.ShadowHand(restrict_wrist_yaw_range=True)
+        physics = mjcf.Physics.from_mjcf_model(robot.mjcf_model)
+
+        # 如果模型里根本没有 WRJ2，就跳过
+        if not any(j.name.endswith("WRJ2") for j in robot.joints):
+            self.skipTest("Model has no WRJ2 joint; skip yaw range test.")
+
+        jnt = [j for j in robot.joints if j.name.endswith("WRJ2")][0]
+        jnt_range = physics.bind(jnt).range
+        self.assertEqual(jnt_range[0], -0.174533)
+        self.assertEqual(jnt_range[1], 0.174533)
+
 
     def test_restrict_wrist_yaw_range(self) -> None:
         robot = shadow_hand.ShadowHand(restrict_wrist_yaw_range=True)

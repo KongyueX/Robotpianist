@@ -126,14 +126,15 @@ class ShadowHand(base.Hand):
         self._forearm_dofs = forearm_dofs
 
         if restrict_wrist_yaw_range:
-            joint = mjcf_utils.safe_find(
-                self._mjcf_root, "joint", self._prefix + "WRJ2"
-            )
-            joint.range = _RESTRICTED_WRJ2_RANGE
-            actuator = mjcf_utils.safe_find(
-                self._mjcf_root, "actuator", self._prefix + "A_WRJ2"
-            )
-            actuator.ctrlrange = _RESTRICTED_WRJ2_RANGE
+            try:
+                joint = mjcf_utils.safe_find(self._mjcf_root, "joint", self._prefix + "WRJ2")
+                joint.range = _RESTRICTED_WRJ2_RANGE
+                actuator = mjcf_utils.safe_find(self._mjcf_root, "actuator", self._prefix + "A_WRJ2")
+                actuator.ctrlrange = _RESTRICTED_WRJ2_RANGE
+            except Exception:
+                # Realman 模型没有 WRJ2 时，跳过该逻辑（避免直接崩）
+                pass
+
 
         # Important: call before parsing.
         self._add_dofs()
@@ -185,7 +186,10 @@ class ShadowHand(base.Hand):
 
         # Remove "grasp_site".
         if self._hand_side == base.HandSide.RIGHT:
-            mjcf_utils.safe_find(self._mjcf_root, "site", "grasp_site").remove()
+            try:
+                mjcf_utils.safe_find(self._mjcf_root, "site", "grasp_site").remove()
+            except Exception:
+                pass
 
     def _add_mjcf_elements(self) -> None:
         # Add sites to the tips of the fingers.
@@ -270,47 +274,70 @@ class ShadowHand(base.Hand):
         self._fingertip_touch_sensors = tuple(fingertip_touch_sensors)
 
     def _add_dofs(self) -> None:
-        """Add forearm degrees of freedom."""
+        """Add forearm degrees of freedom.
 
-        def _maybe_reflect_axis(
-            axis: Sequence[float], reflect: bool
-        ) -> Sequence[float]:
+        Strategy A: if the XML already contains `forearm_tx/forearm_ty`, reuse them
+        (and normalize their attributes) instead of adding duplicates.
+        """
+
+        def _maybe_reflect_axis(axis: Sequence[float], reflect: bool) -> Sequence[float]:
             if self._hand_side == base.HandSide.LEFT and reflect:
                 return tuple([-a for a in axis])
             return axis
 
+        # 取当前模型里的 actuator 列表（可能为空）
+        try:
+            existing_actuators = list(mjcf_utils.safe_find_all(self._mjcf_root, "actuator"))
+        except Exception:
+            existing_actuators = []
+
         for dof_name in self._forearm_dofs:
             if dof_name not in _FOREARM_DOFS:
                 raise ValueError(
-                    f"Invalid forearm DOF: {dof_name}. Valid DOFs are: "
-                    f"{_FOREARM_DOFS}."
+                    f"Invalid forearm DOF: {dof_name}. Valid DOFs are: {_FOREARM_DOFS}."
                 )
-
             dof = _FOREARM_DOFS[dof_name]
 
-            joint = self.root_body.add(
-                "joint",
-                type=dof.joint_type,
-                name=dof_name,
-                axis=_maybe_reflect_axis(dof.axis, dof.reflect),
-                range=dof.joint_range,
-            )
+            # 1) joint：优先复用
+            try:
+                joint = mjcf_utils.safe_find(self._mjcf_root, "joint", dof_name)
+                # 统一参数（避免 XML 里的 axis/range 与 RoboPianist 约定不一致）
+                joint.type = dof.joint_type
+                joint.axis = _maybe_reflect_axis(dof.axis, dof.reflect)
+                joint.range = dof.joint_range
+            except Exception:
+                joint = self.root_body.add(
+                    "joint",
+                    type=dof.joint_type,
+                    name=dof_name,
+                    axis=_maybe_reflect_axis(dof.axis, dof.reflect),
+                    range=dof.joint_range,
+                )
 
+            # damping 统一成“由 stiffness 推的临界阻尼”
             joint.damping = physics_utils.get_critical_damping_from_stiffness(
                 dof.stiffness, joint.full_identifier, self.mjcf_model
             )
 
-            self._mjcf_root.actuator.add(
-                "position",
-                name=dof_name,
-                joint=joint,
-                ctrlrange=dof.joint_range,
-                kp=dof.stiffness,
-            )
+            # 2) actuator：优先复用（名字建议就是 dof_name）
+            act = next((a for a in existing_actuators if a.name == dof_name), None)
+            if act is None:
+                act = self._mjcf_root.actuator.add(
+                    "position",
+                    name=dof_name,
+                    joint=joint,
+                    ctrlrange=dof.joint_range,
+                    kp=dof.stiffness,
+                )
+                existing_actuators.append(act)
+            else:
+                # 统一参数
+                act.joint = joint
+                act.ctrlrange = dof.joint_range
+                act.kp = dof.stiffness
 
             self._n_forearm_dofs += 1
 
-    # Accessors.
 
     @property
     def hand_side(self) -> base.HandSide:
