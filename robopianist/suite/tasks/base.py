@@ -31,10 +31,17 @@ _PHYSICS_TIMESTEP = 0.005
 _CONTROL_TIMESTEP = 0.05  # 20 Hz.
 
 # Default position and orientation of the hands.
-_LEFT_HAND_POSITION = (0.4, -0.15, 0.13)
-_LEFT_HAND_QUATERNION = (-1, -1, 1, 1)
-_RIGHT_HAND_POSITION = (0.4, 0.15, 0.13)
-_RIGHT_HAND_QUATERNION = (-1, -1, 1, 1)
+# 你的 q_old 基础上做 qx180 ⊗ q_old
+_LEFT_HAND_QUATERNION = (0.0, -0.7071068, 0.0, 0.7071068)
+
+
+_RIGHT_HAND_QUATERNION = (0.0, 0.7071068, 0.0, -0.7071068)
+
+
+
+_RIGHT_HAND_POSITION = (0.25, 0.2, 0.13)
+_LEFT_HAND_POSITION = (0.25, -0.2, 0.13)
+
 
 _ATTACHMENT_YAW = 0  # Degrees.
 
@@ -181,6 +188,11 @@ class PianoTask(PianoOnlyTask):
         final_quaternion = np.zeros(4, dtype=np.float64)
         mujoco.mju_mulQuat(final_quaternion, rotate_by, quaternion)
         hand.root_body.quat = final_quaternion
+        # 让 forearm_tx 变成左右移动（world X），而不是上下（world Z）
+        forearm_tx_joint = hand.mjcf_model.find("joint", "forearm_tx")
+        if forearm_tx_joint is not None:
+            forearm_tx_joint.axis = (0, 1, 0)  # 若左右方向反了，改成 (0, 0, 1)
+
 
         if gravity_compensation:
             physics_utils.compensate_gravity(hand.mjcf_model)

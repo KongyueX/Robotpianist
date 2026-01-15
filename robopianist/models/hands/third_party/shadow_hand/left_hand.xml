@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mujoco model="left">
+  <compiler angle="radian" />
+
+  <asset>
+    <mesh name="L_wrist" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/wrist.STL" />
+    <mesh name="L_palm" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/palm.STL" />
+
+    <mesh name="L_FF0" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/FF0.STL" />
+    <mesh name="L_FF1" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/FF1.STL" />
+    <mesh name="L_FF2" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/FF2.STL" />
+
+    <mesh name="L_MF0" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/MF0.STL" />
+    <mesh name="L_MF1" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/MF1.STL" />
+    <mesh name="L_MF2" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/MF2.STL" />
+
+    <mesh name="L_RF0" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/RF0.STL" />
+    <mesh name="L_RF1" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/RF1.STL" />
+    <mesh name="L_RF2" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/RF2.STL" />
+
+    <mesh name="L_LF0" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/LF0.STL" />
+    <mesh name="L_LF1" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/LF1.STL" />
+    <mesh name="L_LF2" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/LF2.STL" />
+
+    <mesh name="L_TH0" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/TH0.STL" />
+    <mesh name="L_TH1" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/TH1.STL" />
+    <mesh name="L_TH2" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/TH2.STL" />
+    <mesh name="L_TH3" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/left/urdf/../meshes/TH3.STL" />
+  </asset>
+  <default>
+    <joint damping="0.5" armature="0.02"/>
+  </default>
+  <worldbody>
+    
+  <body name="lh_forearm" quat="0.7071068 -0.7071068 0 0">
+    <joint name="forearm_tx" type="slide" axis="1 0 0" range="-0.25 0.25" damping="5" />
+    <joint name="forearm_ty" type="slide" axis="0 1 0" range="-0.15 0.35" damping="5" />
+
+
+      
+      <body name="L_wrist" quat="0.707388 0 0 -0.706825">
+        <inertial pos="0.00054177 -0.0072101 0.058151" quat="0.707332 0.0391421 0.043182 0.704474" mass="0.075667" diaginertia="7.41777e-05 4.62188e-05 3.65825e-05" />
+        <geom type="mesh" rgba="1 1 1 1" mesh="L_wrist" />
+
+        <body name="L_palm" pos="0.006962 0.012987 0.083048">
+          <inertial pos="-0.011999 -0.0025212 0.0019088" quat="0.703234 0.119896 0.109988 0.692091" mass="0.015236" diaginertia="2.90929e-05 2.05915e-05 9.15163e-06" />
+          <geom type="mesh" rgba="1 1 1 1" mesh="L_palm" />
+
+          <body name="L_FF0" pos="0.02349 -0.0082497 0.055921">
+            <inertial pos="0.00024926 -0.0018876 0.022916" quat="0.707008 0.00415035 -0.00263507 0.707189" mass="0.0037851" diaginertia="8.3103e-07 7.86073e-07 1.78807e-07" />
+            <joint name="L_FFJ0" pos="0 0 0" axis="-1 0 0" range="0 1.39" />
+            <geom type="mesh" rgba="1 1 1 1" mesh="L_FF0" />
+
+            <body name="L_FF1" pos="0.0003 -0.0032121 0.03859">
+              <inertial pos="-6.287e-06 0.00050674 0.012301" quat="0.703252 0.0585771 -0.059339 0.706034" mass="0.0022151" diaginertia="1.38131e-07 1.3295e-07 5.51566e-08" />
+              <joint name="L_FFJ1" pos="0 0 0" axis="-1 0 0" range="-0.07 1.5708" />
+              <geom type="mesh" rgba="1 1 1 1" mesh="L_FF1" />
+
+              <body name="lh_ffdistal" pos="0 -0.0033672 0.024281">
+                <inertial pos="1.9861e-06 -0.0013961 0.012606" quat="0.954075 0.299445 0.00228332 -0.00822171" mass="0.0029562" diaginertia="1.1129e-07 1.10365e-07 3.57145e-08" />
+                <joint name="L_FFJ2" pos="0 0 0" axis="-1 0 0" range="-0.07 1.127" />
+                <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="L_FF2" />
+              </body>
+            </body>
+          </body>
+
+          <body name="L_MF0" pos="0.0033546 -0.0082497 0.06289">
+            <inertial pos="0.00024034 -0.0021897 0.022893" quat="0.706961 0.00893919 -0.00742496 0.707157" mass="0.0037851" diaginertia="8.31079e-07 7.86073e-07 1.78758e-07" />
+            <joint name="L_MFJ0" pos="0 0 0" axis="-1 0 0" range="0 1.39" />
+            <geom type="mesh" rgba="1 1 1 1" mesh="L_MF0" />
+
+            <body name="L_MF1" pos="0.0003 -0.0037267 0.038543">
+              <inertial pos="-6.2871e-06 0.00023456 0.012311" quat="0.702558 0.066412 -0.0672044 0.705327" mass="0.0022151" diaginertia="1.38137e-07 1.3295e-07 5.51481e-08" />
+              <joint name="L_MFJ1" pos="0 0 0" axis="-1 0 0" range="-0.07 1.5708" />
+              <geom type="mesh" rgba="1 1 1 1" mesh="L_MF1" />
+
+              <body name="lh_mfdistal" pos="0 -0.0039045 0.0242">
+                <inertial pos="1.9738e-06 -0.0017379 0.012564" quat="0.949923 0.31237 0.00236937 -0.00811057" mass="0.0029562" diaginertia="1.1129e-07 1.10367e-07 3.57147e-08" />
+                <joint name="L_MFJ2" pos="0 0 0" axis="-1 0 0" range="-0.07 1.127" />
+                <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="L_MF2" />
+              </body>
+            </body>
+          </body>
+
+          <body name="L_RF0" pos="-0.017053 -0.0082497 0.057909">
+            <inertial pos="-0.00010074 -0.0018919 0.022916" quat="0.707007 0.00421754 -0.00270229 0.707189" mass="0.0037851" diaginertia="8.31032e-07 7.86073e-07 1.78805e-07" />
+            <joint name="L_RFJ0" pos="0 0 0" axis="-1 0 0" range="0 1.39" />
+            <geom type="mesh" rgba="1 1 1 1" mesh="L_RF0" />
+
+            <body name="L_RF1" pos="-5e-05 -0.0032194 0.038589">
+              <inertial pos="-6.287e-06 0.0005029 0.012302" quat="0.703242 0.0586904 -0.0594527 0.706025" mass="0.0022151" diaginertia="1.3813e-07 1.3295e-07 5.51568e-08" />
+              <joint name="L_RFJ1" pos="0 0 0" axis="-1 0 0" range="-0.07 1.5708" />
+              <geom type="mesh" rgba="1 1 1 1" mesh="L_RF1" />
+
+              <body name="lh_rfdistal" pos="0 -0.0033748 0.02428">
+                <inertial pos="1.9838e-06 -0.001401 0.012606" quat="0.954019 0.299626 0.00228037 -0.00820609" mass="0.0029562" diaginertia="1.1129e-07 1.10366e-07 3.57148e-08" />
+                <joint name="L_RFJ2" pos="0 0 0" axis="-1 0 0" range="-0.07 1.127" />
+                <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="L_RF2" />
+              </body>
+            </body>
+          </body>
+
+          <body name="L_LF0" pos="-0.037785 -0.0082497 0.045842">
+            <inertial pos="-9.6987e-06 -0.00091388 0.022964" quat="0.706936 -0.0112607 0.0127788 0.707072" mass="0.0037851" diaginertia="8.30873e-07 7.86073e-07 1.78964e-07" />
+            <joint name="L_LFJ0" pos="0 0 0" axis="-1 0 0" range="0 1.39" />
+            <geom type="mesh" rgba="1 1 1 1" mesh="L_LF0" />
+
+            <body name="L_LF1" pos="5e-05 -0.0015525 0.038692">
+              <inertial pos="-6.2874e-06 0.0013967 0.012229" quat="0.704918 0.0328349 -0.0334952 0.707736" mass="0.0022151" diaginertia="1.38108e-07 1.3295e-07 5.51849e-08" />
+              <joint name="L_LFJ1" pos="0 0 0" axis="-1 0 0" range="-0.07 1.5708" />
+              <geom type="mesh" rgba="1 1 1 1" mesh="L_LF1" />
+
+              <body name="lh_lfdistal" pos="0 -0.0015947 0.024461">
+                <inertial pos="1.9978e-06 -0.00025841 0.012681" quat="0.966567 0.256258 0.00200979 -0.00869644" mass="0.0029562" diaginertia="1.1129e-07 1.10364e-07 3.57153e-08" />
+                <joint name="L_LFJ2" pos="0 0 0" axis="-1 0 0" range="-0.07 1.127" />
+                <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="L_LF2" />
+              </body>
+            </body>
+          </body>
+
+          <body name="L_TH0" pos="0.015255 -0.0083497 0.0052814" quat="0.997884 0 0 0.0650241">
+            <inertial pos="0.0047151 -4.0431e-06 -0.011967" quat="0.705151 0.0479733 0.0484046 0.705774" mass="0.0019231" diaginertia="2.6734e-07 2.58524e-07 3.00705e-08" />
+            <joint name="L_THJ0" pos="0 0 0" axis="0 0 1" range="0 2.2" />
+            <geom type="mesh" rgba="1 1 1 1" mesh="L_TH0" />
+
+            <body name="L_TH1" pos="0.0075 0 -0.01705">
+              <inertial pos="0.020295 6.5827e-05 -0.0050984" quat="0.491916 0.50754 0.517503 0.482299" mass="0.004331" diaginertia="1.14581e-06 1.11995e-06 6.31569e-07" />
+              <joint name="L_THJ1" pos="0 0 0" axis="0 -1 0" range="0 0.7" />
+              <geom type="mesh" rgba="1 1 1 1" mesh="L_TH1" />
+
+              <body name="L_TH2" pos="0.038855 5e-05 -0.00060069">
+                <inertial pos="0.015015 5.0093e-05 0.0018698" quat="0.529175 0.470148 0.51463 0.483829" mass="0.0028123" diaginertia="3.99611e-07 3.94557e-07 1.96382e-07" />
+                <joint name="L_THJ2" pos="0 0 0" axis="0 -1 0" range="0 0.928" />
+                <geom type="mesh" rgba="1 1 1 1" mesh="L_TH2" />
+
+                <body name="lh_thdistal" pos="0.03403 -5e-05 0.0055613">
+                  <inertial pos="0.013224 -2.6308e-06 0.0044986" quat="0.00302785 0.629217 0.00305169 0.777218" mass="0.0056262" diaginertia="4.54903e-07 4.4741e-07 1.85278e-07" />
+                  <joint name="L_THJ3" pos="0 0 0" axis="0 -1 0" range="0 1.136" />
+                  <geom type="mesh" rgba="1 1 1 1" mesh="L_TH3" />
+                </body>
+              </body>
+            </body>
+          </body>
+
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  
+  <actuator>
+    <position name="forearm_tx" joint="forearm_tx" kp="200" kv="10" forcerange="-50 50" ctrlrange="-0.25 0.25" />
+    <position name="forearm_ty" joint="forearm_ty" kp="200" kv="10" forcerange="-50 50" ctrlrange="-0.15 0.35" />
+
+    <position name="L_FFJ0_act" joint="L_FFJ0" kp="20" kv="2" forcerange="-0.6 0.6" ctrlrange="0 1.39" />
+    <position name="L_FFJ1_act" joint="L_FFJ1" kp="20" kv="2" forcerange="-0.6 0.6" ctrlrange="-0.07 1.5708" />
+    <position name="L_FFJ2_act" joint="L_FFJ2" kp="20" kv="2" forcerange="-0.6 0.6" ctrlrange="-0.07 1.127" />
+
+    <position name="L_MFJ0_act" joint="L_MFJ0" kp="20" kv="2" forcerange="-0.6 0.6" ctrlrange="0 1.39" />
+    <position name="L_MFJ1_act" joint="L_MFJ1" kp="20" kv="2" forcerange="-0.6 0.6" ctrlrange="-0.07 1.5708" />
+    <position name="L_MFJ2_act" joint="L_MFJ2" kp="20" kv="2" forcerange="-0.6 0.6" ctrlrange="-0.07 1.127" />
+
+    <position name="L_RFJ0_act" joint="L_RFJ0" kp="20" kv="2" forcerange="-0.6 0.6" ctrlrange="0 1.39" />
+    <position name="L_RFJ1_act" joint="L_RFJ1" kp="20" kv="2" forcerange="-0.6 0.6" ctrlrange="-0.07 1.5708" />
+    <position name="L_RFJ2_act" joint="L_RFJ2" kp="20" kv="2" forcerange="-0.6 0.6" ctrlrange="-0.07 1.127" />
+
+    <position name="L_LFJ0_act" joint="L_LFJ0" kp="20" kv="2" forcerange="-0.6 0.6" ctrlrange="0 1.39" />
+    <position name="L_LFJ1_act" joint="L_LFJ1" kp="20" kv="2" forcerange="-0.6 0.6" ctrlrange="-0.07 1.5708" />
+    <position name="L_LFJ2_act" joint="L_LFJ2" kp="20" kv="2" forcerange="-0.6 0.6" ctrlrange="-0.07 1.127" />
+
+    <position name="L_THJ0_act" joint="L_THJ0" kp="20" kv="2" forcerange="-0.6 0.6" ctrlrange="0 2.2" />
+    <position name="L_THJ1_act" joint="L_THJ1" kp="20" kv="2" forcerange="-0.6 0.6" ctrlrange="0 0.7" />
+    <position name="L_THJ2_act" joint="L_THJ2" kp="20" kv="2" forcerange="-0.6 0.6" ctrlrange="0 0.928" />
+    <position name="L_THJ3_act" joint="L_THJ3" kp="20" kv="2" forcerange="-0.6 0.6" ctrlrange="0 1.136" />
+  </actuator>
+</mujoco>

@@ -273,7 +273,6 @@ class ShadowHand(base.Hand):
             )
             fingertip_touch_sensors.append(touch_sensor)
         self._fingertip_touch_sensors = tuple(fingertip_touch_sensors)
-
     def _add_dofs(self) -> None:
         """Add forearm degrees of freedom.
 

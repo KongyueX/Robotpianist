@@ -1,0 +1,3 @@
+<mujoco model="realman_left_scene">
+  <include file="realman_left.xml"/>
+</mujoco>
