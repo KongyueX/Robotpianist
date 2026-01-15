@@ -453,12 +453,30 @@ class PianoWithShadowHands(base.PianoTask):
         for hand in [self.right_hand, self.left_hand]:
             for i, body in enumerate(hand.fingertip_bodies):
                 color = hand_consts.FINGERTIP_COLORS[i] + (_FINGERTIP_ALPHA,)
-                for geom in body.find_all("geom"):
-                    if geom.dclass.dclass == "plastic_visual":
-                        geom.rgba = color
-                # Also color the fingertip sites.
-                hand.fingertip_sites[i].rgba = color
 
+                for geom in body.find_all("geom"):
+                    # 1) Prefer matching visual dclass when available
+                    dclass_name = None
+                    try:
+                        if geom.dclass is not None:
+                            # dm_control mjcf: geom.dclass is a DefaultClass object; .dclass is its name
+                            dclass_name = getattr(geom.dclass, "dclass", None)
+                    except Exception:
+                        dclass_name = None
+
+                    if dclass_name == "plastic_visual":
+                        geom.rgba = color
+                        continue
+
+                    # 2) Fallback: color likely-visual geoms (no contact)
+                    # contype/conaffinity are absent sometimes; getattr keeps this safe.
+                    contype = getattr(geom, "contype", None)
+                    conaffinity = getattr(geom, "conaffinity", None)
+                    if (contype == 0) and (conaffinity == 0):
+                        geom.rgba = color
+
+                # Also color the fingertip sites (sites should always exist if fingertip parsing succeeded)
+                hand.fingertip_sites[i].rgba = color
     def _colorize_keys(self, physics) -> None:
         """Colorize the keys by the corresponding fingertip color."""
         for hand, keys in zip(

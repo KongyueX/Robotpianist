@@ -144,8 +144,9 @@ class ShadowHand(base.Hand):
 
         if primitive_fingertip_collisions:
             for geom in self._mjcf_root.find_all("geom"):
+                dclass_name = getattr(getattr(geom, "dclass", None), "dclass", None)
                 if (
-                    geom.dclass.dclass == "plastic_collision"
+                    dclass_name == "plastic_collision"
                     and geom.mesh is not None
                     and geom.mesh.name is not None
                     and geom.mesh.name.endswith("distal_pst")

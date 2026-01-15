@@ -10,7 +10,6 @@ WANDB_DIR=/tmp/robopianist/ MUJOCO_GL=egl XLA_PYTHON_CLIENT_PREALLOCATE=false CU
     --agent-config.hidden-dims 256 256 256 \
     --trim-silence \
     --gravity-compensation \
-    --reduced-action-space \
     --control-timestep 0.05 \
     --n-steps-lookahead 10 \
     --environment-name "RoboPianist-debug-TwinkleTwinkleRousseau-v0" \

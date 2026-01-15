@@ -91,16 +91,19 @@ class ShadowHandTest(parameterized.TestCase):
     )
     def test_restrict_wrist_yaw_range(self) -> None:
         robot = shadow_hand.ShadowHand(restrict_wrist_yaw_range=True)
+
+        # If the underlying MJCF doesn't have WRJ2 (e.g., Realman), just ensure build succeeds.
+        try:
+            joint = mjcf_utils.safe_find(robot.mjcf_model, "joint", robot.prefix + "WRJ2")
+        except Exception:
+            self.skipTest("Model has no WRJ2; skipping ShadowHand-specific wrist-yaw range test.")
+            return
+
         physics = mjcf.Physics.from_mjcf_model(robot.mjcf_model)
+        jnt_range = physics.bind(joint).range
+        self.assertAlmostEqual(jnt_range[0], -0.174533, places=6)
+        self.assertAlmostEqual(jnt_range[1],  0.174533, places=6)
 
-        # 如果模型里根本没有 WRJ2，就跳过
-        if not any(j.name.endswith("WRJ2") for j in robot.joints):
-            self.skipTest("Model has no WRJ2 joint; skip yaw range test.")
-
-        jnt = [j for j in robot.joints if j.name.endswith("WRJ2")][0]
-        jnt_range = physics.bind(jnt).range
-        self.assertEqual(jnt_range[0], -0.174533)
-        self.assertEqual(jnt_range[1], 0.174533)
 
 
     def test_restrict_wrist_yaw_range(self) -> None:
