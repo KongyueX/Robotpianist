@@ -3,30 +3,31 @@
   <compiler angle="radian" />
 
   <asset>
-    <mesh name="R_wrist" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/wrist.STL" />
-    <mesh name="R_palm" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/palm.STL" />
+    <mesh name="R_wrist" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/wrist.STL"/>
+    <mesh name="R_palm"  content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/palm.STL"/>
 
-    <mesh name="R_FF0" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/FF0.STL" />
-    <mesh name="R_FF1" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/FF1.STL" />
-    <mesh name="R_FF2" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/FF2.STL" />
+    <mesh name="R_FF0" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/FF0.STL"/>
+    <mesh name="R_FF1" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/FF1.STL"/>
+    <mesh name="R_FF2" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/FF2.STL"/>
 
-    <mesh name="R_MF0" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/MF0.STL" />
-    <mesh name="R_MF1" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/MF1.STL" />
-    <mesh name="R_MF2" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/MF2.STL" />
+    <mesh name="R_MF0" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/MF0.STL"/>
+    <mesh name="R_MF1" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/MF1.STL"/>
+    <mesh name="R_MF2" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/MF2.STL"/>
 
-    <mesh name="R_RF0" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/RF0.STL" />
-    <mesh name="R_RF1" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/RF1.STL" />
-    <mesh name="R_RF2" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/RF2.STL" />
+    <mesh name="R_RF0" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/RF0.STL"/>
+    <mesh name="R_RF1" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/RF1.STL"/>
+    <mesh name="R_RF2" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/RF2.STL"/>
 
-    <mesh name="R_LF0" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/LF0.STL" />
-    <mesh name="R_LF1" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/LF1.STL" />
-    <mesh name="R_LF2" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/LF2.STL" />
+    <mesh name="R_LF0" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/LF0.STL"/>
+    <mesh name="R_LF1" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/LF1.STL"/>
+    <mesh name="R_LF2" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/LF2.STL"/>
 
-    <mesh name="R_TH0" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/TH0.STL" />
-    <mesh name="R_TH1" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/TH1.STL" />
-    <mesh name="R_TH2" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/TH2.STL" />
-    <mesh name="R_TH3" content_type="model/stl" file="/home/xiaoyi/Robotpianist/third_party/realman_linkhand/right2/urdf/../meshes/TH3.STL" />
+    <mesh name="R_TH0" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/TH0.STL"/>
+    <mesh name="R_TH1" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/TH1.STL"/>
+    <mesh name="R_TH2" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/TH2.STL"/>
+    <mesh name="R_TH3" content_type="model/stl" file="third_party/realman_linkhand/right2/meshes/TH3.STL"/>
   </asset>
+
   <default>
     <joint damping="0.5" armature="0.02"/>
   </default>
