@@ -60,7 +60,7 @@
               <body name="rh_ffdistal" pos="-5e-05 0.0014086 0.024473">
                 <inertial pos="-2.55604e-06 -0.00101427 0.0121071" quat="0.697444 -0.107058 0.108203 0.700287" mass="0.00307284" diaginertia="1.35225e-07 1.28587e-07 5.64318e-08" />
                 <joint name="R_FFJ2" pos="0 0 0" axis="1 0 0" range="-0.07 1.127" />
-                <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="R_FF2" />
+                <geom type="mesh" rgba="0.8 0.2 0.2 1" mesh="R_FF2" />
               </body>
             </body>
           </body>
@@ -78,7 +78,7 @@
               <body name="rh_mfdistal" pos="-0.00011404 0.0019726 0.024433">
                 <inertial pos="-0.000108805 -0.000669355 0.0121305" quat="0.696372 -0.12003 0.115107 0.698147" mass="0.00307283" diaginertia="1.35224e-07 1.28587e-07 5.64314e-08" />
                 <joint name="R_MFJ2" pos="0 0 0" axis="0.999962 0 0.00875991" range="-0.07 1.127" />
-                <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="R_MF2" />
+                <geom type="mesh" rgba="0.2 0.8 0.8 1" mesh="R_MF2" />
               </body>
             </body>
           </body>
@@ -96,7 +96,7 @@
               <body name="rh_rfdistal" pos="-0.00054253 8.4052e-05 0.024507">
                 <inertial pos="-0.000317355 -0.00182471 0.0120074" quat="0.701708 -0.0927879 0.0754359 0.702358" mass="0.00307282" diaginertia="1.35224e-07 1.28586e-07 5.64313e-08" />
                 <joint name="R_RFJ2" pos="0 0 0" axis="0.999656 0 0.0262099" range="-0.07 1.127" />
-                <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="R_RF2" />
+                <geom type="mesh" rgba="0.2 0.2 0.8 1" mesh="R_RF2" />
               </body>
             </body>
           </body>
@@ -114,7 +114,7 @@
               <body name="rh_lfdistal" pos="-0.00075593 0.000787496 0.0244889">
                 <inertial pos="-0.000424168 -0.0013943 0.0120617" quat="0.700631 -0.10833 0.0849563 0.700116" mass="0.00307284" diaginertia="1.35225e-07 1.28587e-07 5.64318e-08" />
                 <joint name="R_LFJ2" pos="0 0 0" axis="0.99939 0 -0.0349329" range="-0.07 1.127" />
-                <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="R_LF2" />
+                <geom type="mesh" rgba="0.8 0.8 0.2 1" mesh="R_LF2" />
               </body>
             </body>
           </body>
@@ -137,7 +137,7 @@
                 <body name="rh_thdistal" pos="0.026651 -0.005665 0.021132">
                   <inertial pos="0.00493733 -0.00105989 0.013027" quat="0.950609 0.0297824 0.291908 -0.101216" mass="0.00562433" diaginertia="4.1525e-07 3.88113e-07 1.65566e-07" />
                   <joint name="R_THJ3" pos="0 0 0" axis="0.20476 -0.978811 0.0017937" range="0 1.136" />
-                  <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="R_TH3" />
+                  <geom type="mesh" rgba="0.8 0.2 0.8 1" mesh="R_TH3" />
                 </body>
               </body>
             </body>

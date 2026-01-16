@@ -7,6 +7,10 @@ import time
 import random
 import numpy as np
 from tqdm import tqdm
+import json
+import shutil
+from flax.training import checkpoints
+
 
 import sac
 import specs
@@ -58,6 +62,14 @@ class Args:
     camera_id: Optional[str | int] = "piano/back"
     action_reward_observation: bool = False
     agent_config: sac.SACConfig = sac.SACConfig()
+        # Checkpointing / best selection
+    checkpoint_interval: int = 500000      # 每隔多少步存一次“训练断点”（可恢复）
+    checkpoint_keep: int = 3                # 断点最多保留几个
+    best_metric: str = "f1"                 # 用哪个指标判定“更好”
+    best_min_delta: float = 0.0             # 至少提升多少才算更好
+    save_best_video: bool = True            # 质量变好时保存视频
+    save_best_ckpt: bool = True             # 质量变好时保存checkpoint
+
 
 
 def prefix_dict(prefix: str, d: dict) -> dict:
@@ -123,7 +135,21 @@ def main(args: Args) -> None:
 
     # Create experiment directory.
     experiment_dir = Path(args.root_dir) / run_name
-    experiment_dir.mkdir(parents=True)
+    experiment_dir.mkdir(parents=True, exist_ok=True)
+    ckpt_dir = experiment_dir / "checkpoints"
+    ckpt_dir.mkdir(parents=True, exist_ok=True)
+
+    best_dir = experiment_dir / "best"
+    best_dir.mkdir(parents=True, exist_ok=True)
+
+    best_state_path = best_dir / "best.json"
+    best_score = -float("inf")
+    if best_state_path.exists():
+        try:
+            best_score = float(json.loads(best_state_path.read_text()).get("score", best_score))
+        except Exception:
+            pass
+
 
     # Seed RNGs.
     random.seed(args.seed)
@@ -188,17 +214,86 @@ def main(args: Args) -> None:
                     wandb.log(prefix_dict("train", metrics), step=i)
 
         # Eval.
+
         if i % args.eval_interval == 0:
             for _ in range(args.eval_episodes):
                 timestep = eval_env.reset()
                 while not timestep.last():
                     timestep = eval_env.step(agent.eval_actions(timestep.observation))
-            log_dict = prefix_dict("eval", eval_env.get_statistics())
-            music_dict = prefix_dict("eval", eval_env.get_musical_metrics())
+
+            stats = eval_env.get_statistics()
+            music = eval_env.get_musical_metrics()
+
+            log_dict = prefix_dict("eval", stats)
+            music_dict = prefix_dict("eval", music)
+
+            # 选择一个用于“模型质量”的标量 score（优先用 F1）
+            # 兼容不同 key 命名：f1 / note_f1 / frame_f1 等
+            metric_candidates = [
+                args.best_metric,
+                "f1", "note_f1", "frame_f1", "precision_recall_f1", "key_f1"
+            ]
+            score = None
+            for k in metric_candidates:
+                if k in music:
+                    score = float(music[k])
+                    break
+                # 有些 wrapper 会把 key 带前缀，保守兼容
+                if f"eval/{k}" in (music_dict or {}):
+                    score = float(music_dict[f"eval/{k}"])
+                    break
+
+            # 先照常 log 到 wandb（offline/online 都能保存；disabled 则不会）
             wandb.log(log_dict | music_dict, step=i)
             video = wandb.Video(str(eval_env.latest_filename), fps=4, format="mp4")
-            wandb.log({"video": video, "global_step": i})
+            wandb.log({"video": video, "global_step": i}, step=i)
+
+            # 定期保存“训练断点”（用于可恢复训练）
+            if args.checkpoint_interval > 0 and (i % args.checkpoint_interval == 0):
+                checkpoints.save_checkpoint(
+                    ckpt_dir=str(ckpt_dir),
+                    target=agent,
+                    step=i,
+                    keep=args.checkpoint_keep,
+                    overwrite=True,
+                )
+
+            # 若 score 可用，则做 best 判定并保存 best 视频 + best checkpoint
+            improved = (score is not None) and (score > best_score + args.best_min_delta)
+            if improved:
+                best_score = score
+
+                meta = {
+                    "step": int(i),
+                    "score": float(best_score),
+                    "metric": args.best_metric,
+                }
+
+                # 保存 best checkpoint（只保留 1 个 best）
+                if args.save_best_ckpt:
+                    best_ckpt_dir = best_dir / "checkpoint_best"
+                    best_ckpt_dir.mkdir(parents=True, exist_ok=True)
+                    checkpoints.save_checkpoint(
+                        ckpt_dir=str(best_ckpt_dir),
+                        target=agent,
+                        step=i,
+                        keep=1,
+                        overwrite=True,
+                    )
+                    meta["best_ckpt_dir"] = str(best_ckpt_dir)
+
+                # 保存 best 视频（拷贝一份出来，再允许删除原视频）
+                if args.save_best_video:
+                    dst = best_dir / f"best_step_{i}_score_{best_score:.6f}.mp4"
+                    shutil.copy2(eval_env.latest_filename, dst)
+                    meta["best_video"] = str(dst)
+
+                best_state_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2))
+
+            # 清理：非 best 的视频删掉；best 的也可以删掉原始文件（因为已 copy2）
+            # 这样磁盘只保留 best_dir 里的少量文件
             eval_env.latest_filename.unlink()
+
 
         if i % args.log_interval == 0:
             wandb.log({"train/fps": int(i / (time.time() - start_time))}, step=i)
