@@ -1,5 +1,7 @@
 __pycache__/
-third_party/
+/third_party/*
+!/third_party/realman_linkhand/
+!/third_party/realman_linkhand/**
 soundfonts/
 *.egg-info/
 .eggs/
