@@ -8,3 +8,16 @@ soundfonts/
 build/
 dist/
 pig_single_finger/
+
+# RL runs/artifacts
+robopianist-rl/robopianist_runs/
+**/wandb/
+**/checkpoints/
+**/checkpoint_best/
+**/export/
+**/*.mp4
+**/*.wav
+**/*.npy
+**/*.npz
+**/*.ocdbt
+**/manifest.ocdbt
