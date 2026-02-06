@@ -32,7 +32,7 @@ from robopianist.suite.tasks import base
 
 # Distance thresholds for the shaping reward.
 _FINGER_CLOSE_ENOUGH_TO_KEY = 0.01
-_KEY_CLOSE_ENOUGH_TO_PRESSED = 0.05
+_KEY_CLOSE_ENOUGH_TO_PRESSED = 0.03
 
 # Energy penalty coefficient.
 _ENERGY_PENALTY_COEF = 5e-3
@@ -369,14 +369,14 @@ class PianoWithOneShadowHand(base.PianoTask):
         self._task_observables["steps_left"] = steps_left_observable
 
     def _colorize_fingertips(self) -> None:
-        """Colorize the fingertips of the hands."""
         for i, name in enumerate(hand_consts.FINGERTIP_BODIES):
             color = hand_consts.FINGERTIP_COLORS[i] + (0.5,)
             body = self._hand.mjcf_model.find("body", name)
-            for geom in body.find_all("geom"):
-                if geom.dclass.dclass == "plastic_visual":
-                    geom.rgba = color
-            # Also color the fingertip sites.
+            if body is not None:
+                for geom in body.find_all("geom"):
+                    if geom.dclass.dclass == "plastic_visual":
+                        geom.rgba = color
+            # site 一定尝试上色（如果 site 存在）
             self._hand.fingertip_sites[i].rgba = color
 
     def _colorize_keys(self, physics) -> None:

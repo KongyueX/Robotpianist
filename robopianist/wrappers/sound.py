@@ -69,7 +69,7 @@ class PianoSoundVideoWrapper(DmControlVideoWrapper):
         waveform = self._synth.get_samples(midi_events)
 
         # Save waveform as mp3.
-        waveform_name = self._record_dir / f"{self._counter:05d}.mp3"
+        waveform_name = self._record_dir / f"{self._counter:05d}.wav"
         wf = wave.open(str(waveform_name), "wb")
         wf.setnchannels(1)
         wf.setsampwidth(2)
@@ -112,7 +112,7 @@ class PianoSoundVideoWrapper(DmControlVideoWrapper):
 
         # Remove temporary files.
         temp_filename.unlink()
-        waveform_name.unlink()
+        #waveform_name.unlink()
 
     def __del__(self) -> None:
         self._synth.stop()

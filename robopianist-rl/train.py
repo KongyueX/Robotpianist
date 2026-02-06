@@ -66,7 +66,7 @@ class Args:
     checkpoint_interval: int = 500000      # 每隔多少步存一次“训练断点”（可恢复）
     checkpoint_keep: int = 3                # 断点最多保留几个
     best_metric: str = "f1"                 # 用哪个指标判定“更好”
-    best_min_delta: float = 0.0             # 至少提升多少才算更好
+    best_min_delta: float = 0.01             # 至少提升多少才算更好
     save_best_video: bool = True            # 质量变好时保存视频
     save_best_ckpt: bool = True             # 质量变好时保存checkpoint
 
@@ -77,6 +77,9 @@ def prefix_dict(prefix: str, d: dict) -> dict:
 
 
 def get_env(args: Args, record_dir: Optional[Path] = None):
+    if record_dir is not None:
+        record_dir = Path(record_dir)
+        record_dir.mkdir(parents=True, exist_ok=True)
     env = suite.load(
         environment_name=args.environment_name,
         seed=args.seed,
@@ -166,6 +169,10 @@ def main(args: Args) -> None:
     )
 
     env = get_env(args)
+    eval_dir = experiment_dir / "eval"
+    eval_dir.mkdir(parents=True, exist_ok=True)
+    eval_env = get_env(args, record_dir=eval_dir)
+
     eval_env = get_env(args, record_dir=experiment_dir / "eval")
 
     spec = specs.EnvironmentSpec.make(env)
@@ -213,6 +220,17 @@ def main(args: Args) -> None:
                 if i % args.log_interval == 0:
                     wandb.log(prefix_dict("train", metrics), step=i)
 
+        # 定期保存“训练断点”（用于可恢复训练）
+        if args.checkpoint_interval > 0 and (i % args.checkpoint_interval == 0):
+            checkpoints.save_checkpoint(
+                ckpt_dir=str(ckpt_dir),
+                target=agent,
+                step=i,
+                keep=args.checkpoint_keep,
+                overwrite=True,
+            )
+
+
         # Eval.
 
         if i % args.eval_interval == 0:
@@ -247,17 +265,7 @@ def main(args: Args) -> None:
             wandb.log(log_dict | music_dict, step=i)
             video = wandb.Video(str(eval_env.latest_filename), fps=4, format="mp4")
             wandb.log({"video": video, "global_step": i}, step=i)
-
-            # 定期保存“训练断点”（用于可恢复训练）
-            if args.checkpoint_interval > 0 and (i % args.checkpoint_interval == 0):
-                checkpoints.save_checkpoint(
-                    ckpt_dir=str(ckpt_dir),
-                    target=agent,
-                    step=i,
-                    keep=args.checkpoint_keep,
-                    overwrite=True,
-                )
-
+          
             # 若 score 可用，则做 best 判定并保存 best 视频 + best checkpoint
             improved = (score is not None) and (score > best_score + args.best_min_delta)
             if improved:
